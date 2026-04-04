@@ -1,0 +1,15 @@
+.DS_Store
+.vscode/
+__pycache__/
+*.py[cod]
+
+code/.ipynb_checkpoints/
+
+datasets/taller2_articulado_with_spring.gif
+datasets/taller2_horizontal_deflector_with_spring.gif
+datasets/taller2_horizontal_deflector_without_spring.gif
+datasets/taller2_script_with_spring.gif
+datasets/taller2_script_without_spring.gif
+datasets/taller2_visual_refined_with_spring.gif
+datasets/taller2_visual_refined_with_spring_frame0.png
+datasets/taller2_visual_refined_with_spring_framemid.png
