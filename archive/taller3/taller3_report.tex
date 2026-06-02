@@ -1,0 +1,195 @@
+\documentclass[11pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{siunitx}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\geometry{margin=2.2cm}
+\sisetup{round-mode=places,round-precision=3}
+
+\title{Taller 3: análisis preliminar de locomoción bípeda en pulpo mediante tracking, aproximación de trayectoria y MuJoCo}
+\author{
+Sergio Emanuel Ropero (202120446) \\
+David Alejandro Puentes Aldana (202022517) \\
+Alberto Luis Alario Caicedo (201711829) \\
+Sebastian Coy (202220612)
+}
+\date{20 de mayo de 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Datos generales}
+Animal asignado: Pulpo (\textit{Abdopus aculeatus}) \\
+Curso: Dinámica de Maquinaria \\
+Profesor: Jonathan Camargo \\
+Fecha de entrega: 20 de mayo de 2026
+
+\section*{Fuentes consultadas}
+Las fuentes usadas en esta versión final del taller fueron:
+\begin{enumerate}[leftmargin=1.6em]
+\item el video experimental del pulpo;
+\item el documento base del taller;
+\item la guía de planeación de trayectorias;
+\item la guía de optimización;
+\item el artículo de Huffard sobre locomoción de \textit{Abdopus aculeatus};
+\item la geometría final de 8 barras observada en MotionGen y digitizada manualmente para su uso en MuJoCo.
+\end{enumerate}
+
+\section*{Método de extracción de la trayectoria}
+El video analizado tiene \SI{29.97}{fps}, \num{301} fotogramas, resolución de \num{320}$\times$\num{240} píxeles y duración aproximada de \SI{10.04}{s}. El cuerpo se rastreó con un seguidor \texttt{CSRT} sobre todo el intervalo, y el extremo distal de dos tentáculos de apoyo se digitizó manualmente en \num{11} instantes visibles (\(f=\{0,10,20,\dots,100\}\)).
+
+La longitud corporal media medida sobre el intervalo analizado fue de \num{95.19} píxeles. Como el video no contiene un patrón de calibración métrica, todas las posiciones se reportan en unidades adimensionales de longitud corporal (\texttt{BL}, body lengths).
+
+El procedimiento aplicado fue:
+\begin{enumerate}[leftmargin=1.6em]
+\item rastrear el centro corporal en todos los fotogramas;
+\item ubicar la punta del tentáculo A y del tentáculo B en los fotogramas visibles;
+\item expresar cada punto distal en coordenadas relativas al cuerpo;
+\item normalizar esas coordenadas por la longitud corporal instantánea;
+\item ordenar los puntos por fase y cerrar el ciclo con una interpolación periódica.
+\end{enumerate}
+
+\section*{Ciclograma de referencia y trayectoria aproximada}
+El ciclograma de referencia se construyó con \num{121} muestras periódicas del tentáculo A. La trayectoria reconstruida ocupa aproximadamente:
+\[
+x \in [-0.881,\,-0.196]\ \text{BL}, \qquad
+y \in [-1.196,\,-0.300]\ \text{BL}.
+\]
+
+Para simplificar la curva y producir una referencia exportable a MotionGen, se generó una aproximación suave de orden 3. La trayectoria aproximada ocupa aproximadamente:
+\[
+x \in [-0.825,\,-0.158]\ \text{BL}, \qquad
+y \in [-1.087,\,-0.314]\ \text{BL}.
+\]
+
+El error RMS entre la trayectoria periódica reconstruida y la trayectoria aproximada fue:
+\[
+\text{RMS} = 0.0837\ \text{BL}.
+\]
+
+En esta versión final del taller, el notebook deja documentadas y exportadas únicamente:
+\begin{itemize}[leftmargin=1.6em]
+\item la trayectoria extraída del video;
+\item la trayectoria aproximada usada como objetivo geométrico externo.
+\end{itemize}
+
+\section*{Secuencia de fase entre extremidades}
+La marcha observada es bípedo-alternada. Para describirla se usó un modelo equivalente de dos extremidades con desfase de media zancada. La tabla resumen es:
+
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+Extremidad & Inicio apoyo [\%] & Fin apoyo [\%] & Duty factor & Desfase [\%] \\
+\midrule
+A & 0.0 & 62.0 & 0.62 & 0.0 \\
+B & 50.0 & 100.0 y 0.0--12.0 & 0.62 & 50.0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Esto indica que el segundo tentáculo entra en apoyo aproximadamente media zancada después del primero, coherente con la locomoción bípeda observada en el video.
+
+\section*{Ángulos articulares aproximados en eventos clave}
+Como el pulpo no presenta articulaciones rígidas discretas, se empleó un modelo equivalente de tres segmentos para reportar ángulos aproximados en cuatro eventos del ciclo. Los resultados fueron:
+
+\begin{center}
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Evento & Fase & \(x\) [BL] & \(y\) [BL] & \(\theta_1\) [deg] & \(\theta_3\) [deg] \\
+\midrule
+Contacto & 0.000 & -0.312 & -0.469 & -149.68 & 98.94 \\
+Apoyo & 0.317 & -0.298 & -0.398 & -156.66 & 75.20 \\
+Despegue & 0.617 & -0.205 & -0.778 & -95.09 & -52.29 \\
+Vuelo & 0.817 & -0.722 & -0.902 & -130.92 & -2.31 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+El ángulo intermedio \(\theta_2\) resultó cercano a cero durante todo el ajuste, por lo que el comportamiento dominante queda capturado por la orientación proximal \(\theta_1\) y la curvatura distal equivalente \(\theta_3\).
+
+\section*{Geometría de 8 barras tomada de MotionGen}
+La síntesis mecánica final no se rehizo dentro de este notebook. La trayectoria aproximada anterior se llevó a la aplicación externa MotionGen y allí se seleccionó una solución de 8 barras. Para esta entrega se digitizó manualmente la geometría observada en la captura final y se construyó con esos parámetros un modelo cinemático en MuJoCo.
+
+La decisión de usar la geometría de 8 barras observada en MotionGen se tomó porque la curva distal del pulpo es demasiado compleja para justificar, en esta versión final, un mecanismo de orden bajo propuesto manualmente dentro del notebook.
+
+\subsection*{Coordenadas de nodos digitizados}
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+Nodo & \(x\) [BL] & \(y\) [BL] \\
+\midrule
+A & -0.82 & -0.31 \\
+B & -0.56 & -0.28 \\
+C & -0.23 & -0.38 \\
+D & -0.80 & -0.79 \\
+E & -0.56 & -0.65 \\
+F & -0.24 & -0.86 \\
+G & -0.45 & -1.17 \\
+H & -0.73 & -1.00 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Eslabones digitizados}
+\begin{center}
+\small
+\begin{tabular}{lccc}
+\toprule
+Eslabón & Uniones & Longitud [BL] & Comentario \\
+\midrule
+L1 & A--B & 0.2617 & barra superior izquierda \\
+L2 & B--C & 0.3448 & barra superior derecha \\
+L3 & A--D & 0.4804 & barra lateral izquierda \\
+L4 & B--D & 0.5636 & barra interna triangular \\
+L5 & D--E & 0.2778 & barra intermedia inferior \\
+L6 & E--F & 0.3828 & barra de salida distal \\
+L7 & A--G & 0.9362 & barra larga inferior \\
+L8 & H--G & 0.3276 & barra corta inferior \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Modelo en MuJoCo}
+MuJoCo se empleó aquí como una visualización cinemática del mecanismo de 8 barras digitizado. El modelo incluye:
+\begin{itemize}[leftmargin=1.6em]
+\item la geometría de 8 barras proveniente de MotionGen;
+\item la nube de puntos de la trayectoria real extraída del video;
+\item la nube de puntos de la trayectoria aproximada usada como objetivo externo;
+\item una caja de trabajo que contiene el área relevante del movimiento.
+\end{itemize}
+
+Por diseño, este modelo \textbf{no} pretende ser una simulación dinámica blanda del tentáculo ni una re-síntesis del mecanismo. Su propósito es verificar visualmente que la geometría seleccionada en MotionGen queda consignada en un modelo reproducible dentro del entorno de trabajo.
+
+\section*{Archivos exportados}
+Los archivos principales generados por el notebook final fueron:
+\begin{itemize}[leftmargin=1.6em]
+\item \texttt{body\_tracking\_all\_frames.csv}
+\item \texttt{distal\_tip\_tracked\_points.csv}
+\item \texttt{reference\_trajectory\_bl.csv}
+\item \texttt{design\_trajectory\_bl.csv}
+\item \texttt{phase\_sequence.csv}
+\item \texttt{equivalent\_joint\_angles\_key\_events\_deg.csv}
+\item \texttt{motiongen\_8bar\_parameters.csv}
+\item \texttt{motiongen\_8bar\_mujoco.png}
+\item \texttt{taller3\_mujoco\_static.gif}
+\end{itemize}
+
+\section*{Limitaciones}
+\begin{itemize}[leftmargin=1.6em]
+\item No existe calibración métrica absoluta en el video, por lo que toda la reconstrucción se expresa en \texttt{BL}.
+\item La trayectoria del pulpo fue parcialmente ocluida y por eso los extremos distales se digitalizaron solo en los instantes visibles.
+\item La geometría de 8 barras fue digitizada manualmente desde una captura de MotionGen; por tanto, sus parámetros deben entenderse como una reconstrucción aproximada de la solución elegida en esa aplicación.
+\item El modelo de MuJoCo es cinemático y geométrico; no representa una simulación dinámica completa del tentáculo como cuerpo deformable.
+\end{itemize}
+
+\section*{Conclusiones}
+El resultado final documentado en esta versión del taller es consistente con el flujo realmente seguido: primero se extrajo la trayectoria distal del pulpo desde video, luego se generó una trayectoria aproximada suave y, finalmente, se tomó una geometría de 8 barras seleccionada en MotionGen para representarla en MuJoCo. De ese modo, el notebook deja una base reproducible de tracking y aproximación de trayectoria, mientras que la etapa de mecanismo final queda explícitamente atribuida a la herramienta externa usada por el grupo.
+
+\end{document}

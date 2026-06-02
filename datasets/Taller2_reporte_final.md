@@ -2,9 +2,9 @@
 
 Autor del trabajo base: Sergio E. Ropero
 
-Archivo principal intervenido: `/Users/sergioe.ropero/Documents/2026/Dinamica/code/Taller 2.ipynb`
+Archivo principal intervenido: `../code/Taller 2.ipynb`
 
-Enunciado base usado: `/Users/sergioe.ropero/Downloads/Taller2.pdf`
+Enunciado base usado: material externo no versionado.
 
 Fecha de cierre final: 2026-04-03
 
@@ -257,7 +257,7 @@ En la revision final no solo se comprobo que la celda terminara, sino que los ar
 
 Verificacion del GIF sin resorte:
 
-- archivo: `/Users/sergioe.ropero/Documents/2026/Dinamica/datasets/taller2_mujoco_without_spring.gif`
+- archivo regenerable: `taller2_mujoco_without_spring.gif`
 - existe: `si`
 - tamano: `1,376,189 bytes`
 - numero de frames: `107`
@@ -266,7 +266,7 @@ Verificacion del GIF sin resorte:
 
 Verificacion del GIF con resorte:
 
-- archivo: `/Users/sergioe.ropero/Documents/2026/Dinamica/datasets/taller2_mujoco_with_spring.gif`
+- archivo regenerable: `taller2_mujoco_with_spring.gif`
 - existe: `si`
 - tamano: `1,484,741 bytes`
 - numero de frames: `107`
@@ -275,17 +275,10 @@ Verificacion del GIF con resorte:
 
 Esas diferencias entre cuadros muestran que los GIF no son imagenes estaticas repetidas, sino una animacion real del movimiento.
 
-### 11.1 Muestras de la visualizacion sin resorte
+### 11.1 Muestras de la visualizacion
 
-![MuJoCo sin resorte frame inicial](/Users/sergioe.ropero/Documents/2026/Dinamica/datasets/taller2_mujoco_without_spring_frame0.png)
-
-![MuJoCo sin resorte frame medio](/Users/sergioe.ropero/Documents/2026/Dinamica/datasets/taller2_mujoco_without_spring_framemid.png)
-
-### 11.2 Muestras de la visualizacion con resorte
-
-![MuJoCo con resorte frame inicial](/Users/sergioe.ropero/Documents/2026/Dinamica/datasets/taller2_mujoco_with_spring_frame0.png)
-
-![MuJoCo con resorte frame medio](/Users/sergioe.ropero/Documents/2026/Dinamica/datasets/taller2_mujoco_with_spring_framemid.png)
+Las muestras y animaciones se omiten del repositorio porque son artefactos
+regenerables desde los scripts de MuJoCo.
 
 ## 12. Revision final del notebook
 
@@ -305,11 +298,10 @@ Los unicos mensajes observados fueron advertencias normales de entorno no intera
 
 Los archivos importantes que quedaron al cierre son:
 
-- notebook final: `/Users/sergioe.ropero/Documents/2026/Dinamica/code/Taller 2.ipynb`
-- GIF MuJoCo sin resorte: `/Users/sergioe.ropero/Documents/2026/Dinamica/datasets/taller2_mujoco_without_spring.gif`
-- GIF MuJoCo con resorte: `/Users/sergioe.ropero/Documents/2026/Dinamica/datasets/taller2_mujoco_with_spring.gif`
-- GIF MuJoCo refinado con resorte: `/Users/sergioe.ropero/Documents/2026/Dinamica/datasets/taller2_visual_refined_with_spring.gif`
-- este informe fuente: `/Users/sergioe.ropero/Documents/2026/Dinamica/datasets/Taller2_reporte_final.md`
+- notebook final: `../code/Taller 2.ipynb`
+- GIF MuJoCo sin resorte: `taller2_mujoco_without_spring.gif` (regenerable)
+- GIF MuJoCo con resorte: `taller2_mujoco_with_spring.gif` (regenerable)
+- este informe fuente: `Taller2_reporte_final.md`
 
 ## 14. Conclusion final
 

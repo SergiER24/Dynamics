@@ -5,11 +5,10 @@ __pycache__/
 
 code/.ipynb_checkpoints/
 
-datasets/taller2_articulado_with_spring.gif
-datasets/taller2_horizontal_deflector_with_spring.gif
-datasets/taller2_horizontal_deflector_without_spring.gif
-datasets/taller2_script_with_spring.gif
-datasets/taller2_script_without_spring.gif
-datasets/taller2_visual_refined_with_spring.gif
-datasets/taller2_visual_refined_with_spring_frame0.png
-datasets/taller2_visual_refined_with_spring_framemid.png
+datasets/robot_rr_plan.npz
+datasets/*_active_trim.csv
+datasets/servo_current_*
+datasets/taller2_*.gif
+datasets/taller2_*frame*.png
+datasets/taller3/
+datasets/volante_inercia_6061/

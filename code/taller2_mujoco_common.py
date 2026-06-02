@@ -87,12 +87,19 @@ def find_mjpython_launcher():
 
 BALL_DIAMETER = 27e-3
 BALL_RADIUS = BALL_DIAMETER / 2.0
-DEFAULT_DEFLECTOR_DRAW_OFFSET = np.array([np.hypot(17e-3, 38e-3), 0.0], dtype=float)
-PICKUP_POINT_DRAW = np.array([120.0, 27.0]) * 1e-3
-RELEASE_POINT_DRAW = np.array([165.0, 67.0]) * 1e-3
+TOOL_EXTRA_LENGTH = 25e-3
+TOOL_EXTRA_MASS_KG = 5e-3  # affects torque calculations in the notebook, not the IK itself
+DEFAULT_DEFLECTOR_DRAW_OFFSET = np.array([np.hypot(17e-3, 38e-3) + TOOL_EXTRA_LENGTH, 0.0], dtype=float)
+PRE_PICK_POINT_DRAW = np.array([120.0, 60.0]) * 1e-3
+PICKUP_POINT_DRAW = np.array([120.0, 2.0]) * 1e-3
+PRE_RELEASE_POINT_DRAW = np.array([155.0, 95.0]) * 1e-3
+RELEASE_POINT_DRAW = np.array([165.0, 92.0]) * 1e-3
+# Theoretical actuator envelope used to explore more reachable poses with the longer tool:
+#   theta0_model = servo2 command in [45, 135] deg
+#   theta1_model = 90 - servo1 command, equivalent to servo1 command in [20, 135] deg
 ACTUATED_BOUNDS_DEG = np.array([
-    [90.0, -5.0],
-    [180.0, 90.0],
+    [45.0, -45.0],
+    [135.0, 70.0],
 ])
 
 SELECTED_SPRING = {
@@ -179,6 +186,7 @@ SEGMENT_PAIRS = [
     ('H', 'G'),
     ('G', 'F'),
     ('A', 'F'),
+    ('G', 'E'),
     ('O1', 'F'),
     ('E1', 'P'),
 ]
@@ -196,6 +204,7 @@ TREE_LINK_SPECS = [
 
 AUX_VISUAL_SEGMENTS = [
     {'name': 'AF', 'start': 'A', 'end': 'F', 'radius': 0.0022, 'rgba': (0.95, 0.55, 0.10, 1.0)},
+    {'name': 'GE', 'start': 'G', 'end': 'E', 'radius': 0.0022, 'rgba': (0.95, 0.55, 0.10, 1.0)},
     {'name': 'O1F', 'start': 'O1', 'end': 'F', 'radius': 0.0022, 'rgba': (0.10, 0.35, 0.90, 1.0)},
     {'name': 'E1P', 'start': 'E1', 'end': 'P', 'radius': 0.0019, 'rgba': (0.45, 0.45, 0.45, 1.0)},
 ]
@@ -264,10 +273,10 @@ def build_waypoints():
             'points_draw': home_points_draw,
             'dependent': home_dependent,
         },
-        'pre_pick': ik_actuated(np.array([120.0, 60.0]) * 1e-3, q_guess_deg=(100.0, 20.0)),
-        'pickup': ik_actuated(PICKUP_POINT_DRAW, q_guess_deg=(100.0, 35.0)),
-        'pre_release': ik_actuated(np.array([145.0, 72.0]) * 1e-3, q_guess_deg=(108.0, 2.0)),
-        'release': ik_actuated(RELEASE_POINT_DRAW, q_guess_deg=(123.0, -2.0)),
+        'pre_pick': ik_actuated(PRE_PICK_POINT_DRAW, q_guess_deg=(72.0, 12.0)),
+        'pickup': ik_actuated(PICKUP_POINT_DRAW, q_guess_deg=(107.0, 68.0)),
+        'pre_release': ik_actuated(PRE_RELEASE_POINT_DRAW, q_guess_deg=(97.0, -11.0)),
+        'release': ik_actuated(RELEASE_POINT_DRAW, q_guess_deg=(104.0, -10.0)),
     }
 
 
@@ -498,14 +507,19 @@ def build_mujoco_xml(trajectory):
       <geom name='geom_aux_AF' type='capsule' size='0.0022 {0.5 * segment_lengths["AF"]:.6f}' rgba='{rgba_text(AUX_VISUAL_SEGMENTS[0])}'/>
     </body>
 
+    <body name='aux_GE' pos='0 0 0'>
+      <freejoint name='joint_aux_GE'/>
+      <geom name='geom_aux_GE' type='capsule' size='0.0022 {0.5 * segment_lengths["GE"]:.6f}' rgba='{rgba_text(AUX_VISUAL_SEGMENTS[1])}'/>
+    </body>
+
     <body name='aux_O1F' pos='0 0 0'>
       <freejoint name='joint_aux_O1F'/>
-      <geom name='geom_aux_O1F' type='capsule' size='0.0022 {0.5 * segment_lengths["O1F"]:.6f}' rgba='{rgba_text(AUX_VISUAL_SEGMENTS[1])}'/>
+      <geom name='geom_aux_O1F' type='capsule' size='0.0022 {0.5 * segment_lengths["O1F"]:.6f}' rgba='{rgba_text(AUX_VISUAL_SEGMENTS[2])}'/>
     </body>
 
     <body name='aux_E1P' pos='0 0 0'>
       <freejoint name='joint_aux_E1P'/>
-      <geom name='geom_aux_E1P' type='capsule' size='0.0019 {0.5 * segment_lengths["E1P"]:.6f}' rgba='{rgba_text(AUX_VISUAL_SEGMENTS[2])}'/>
+      <geom name='geom_aux_E1P' type='capsule' size='0.0019 {0.5 * segment_lengths["E1P"]:.6f}' rgba='{rgba_text(AUX_VISUAL_SEGMENTS[3])}'/>
     </body>
 
     <body name='mark_P_body' pos='0 0 0'>
