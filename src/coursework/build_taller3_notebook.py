@@ -5,9 +5,9 @@ from pathlib import Path
 import nbformat as nbf
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-CODE_DIR = PROJECT_ROOT / "code"
-NOTEBOOK_PATH = CODE_DIR / "Taller 3.ipynb"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+CODE_DIR = PROJECT_ROOT / "src" / "coursework"
+NOTEBOOK_PATH = PROJECT_ROOT / "notebooks" / "coursework" / "Taller 3.ipynb"
 PIPELINE_PATH = CODE_DIR / "taller3_pipeline.py"
 
 

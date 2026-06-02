@@ -20,20 +20,20 @@ def resolve_project_root() -> Path:
     file_var = globals().get("__file__")
     candidates = []
     if file_var:
-        candidates.append(Path(file_var).resolve().parent.parent)
+        candidates.append(Path(file_var).resolve().parents[2])
     candidates.append(Path.cwd().resolve())
     candidates.append(Path.cwd().resolve().parent)
 
     for candidate in candidates:
-        if (candidate / "code").exists() and (candidate / "datasets").exists():
+        if (candidate / "src" / "coursework").exists() and (candidate / "data" / "raw").exists():
             return candidate
     return candidates[0]
 
 
 PROJECT_ROOT = resolve_project_root()
-CODE_DIR = PROJECT_ROOT / "code"
-DATASETS_DIR = PROJECT_ROOT / "datasets"
-OUTPUT_DIR = DATASETS_DIR / "taller3"
+CODE_DIR = PROJECT_ROOT / "src" / "coursework"
+DATASETS_DIR = PROJECT_ROOT / "data" / "raw"
+OUTPUT_DIR = PROJECT_ROOT / "results" / "coursework" / "workshop_3"
 
 def external_input(env_var: str, filename: str) -> Path:
     configured = os.environ.get(env_var)

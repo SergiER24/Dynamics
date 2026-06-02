@@ -7,17 +7,19 @@ import numpy as np
 import pandas as pd
 
 
-ROOT = Path(__file__).resolve().parents[1]
-DATASETS = ROOT / 'datasets'
+ROOT = Path(__file__).resolve().parents[2]
+DATASETS = ROOT / 'data' / 'raw'
+RESULTS = ROOT / 'results' / 'coursework'
+FIGURES = ROOT / 'figures'
 
 WITHOUT_SPRING_CSV = DATASETS / 'Grupo5_Sin_Resorte(in).csv'
 WITH_SPRING_CSV = DATASETS / 'Grupo5_Con_Resorte(in).csv'
-WITHOUT_SPRING_ACTIVE_TRIM_CSV = DATASETS / 'Grupo5_Sin_Resorte_active_trim.csv'
-WITH_SPRING_ACTIVE_TRIM_CSV = DATASETS / 'Grupo5_Con_Resorte_active_trim.csv'
+WITHOUT_SPRING_ACTIVE_TRIM_CSV = RESULTS / 'Grupo5_Sin_Resorte_active_trim.csv'
+WITH_SPRING_ACTIVE_TRIM_CSV = RESULTS / 'Grupo5_Con_Resorte_active_trim.csv'
 
-SUMMARY_CSV = DATASETS / 'servo_current_summary.csv'
-COMPARISON_CSV = DATASETS / 'servo_current_comparison.csv'
-PLOT_PNG = DATASETS / 'servo_current_comparison.png'
+SUMMARY_CSV = RESULTS / 'servo_current_summary.csv'
+COMPARISON_CSV = RESULTS / 'servo_current_comparison.csv'
+PLOT_PNG = FIGURES / 'servo_current_comparison_coursework.png'
 ACTIVE_THRESHOLD_MA = 10.0
 
 # The notebook reports theoretical torques in the order [theta0, theta1].
@@ -240,6 +242,8 @@ def save_plot() -> None:
 
 
 def main() -> int:
+    RESULTS.mkdir(parents=True, exist_ok=True)
+    FIGURES.mkdir(parents=True, exist_ok=True)
     save_active_trimmed_measurements()
     summary, comparison = build_summary()
     summary.to_csv(SUMMARY_CSV, index=False)

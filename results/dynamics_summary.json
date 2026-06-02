@@ -1,0 +1,75 @@
+{
+  "project": "Spring-Assisted Robotic Mechanism",
+  "portable_rr_reference": {
+    "link_1_m": 0.7,
+    "link_2_m": 0.7,
+    "trajectory_duration_s": 6.9,
+    "start_position_m": [
+      1.4,
+      0.05
+    ],
+    "final_position_m": [
+      1.1876946965430157,
+      0.552149263629666
+    ],
+    "maximum_finite_jacobian_condition_number": 77891141.38329938
+  },
+  "experimental_current_analysis": {
+    "without_spring": {
+      "servo_1": {
+        "mean_absolute_current_ma": 38.6251968503937,
+        "rms_current_ma": 77.16104847379151,
+        "peak_absolute_current_ma": 364.5,
+        "absolute_charge_mas": 504.79267106056227
+      },
+      "servo_2": {
+        "mean_absolute_current_ma": 136.54094488188974,
+        "rms_current_ma": 203.99526916700708,
+        "peak_absolute_current_ma": 393.8,
+        "absolute_charge_mas": 1797.301977837086
+      }
+    },
+    "with_spring": {
+      "servo_1": {
+        "mean_absolute_current_ma": 48.14695652173914,
+        "rms_current_ma": 86.34604343796713,
+        "peak_absolute_current_ma": 339.5,
+        "absolute_charge_mas": 286.2178947687149
+      },
+      "servo_2": {
+        "mean_absolute_current_ma": 269.4434782608696,
+        "rms_current_ma": 299.69175294393517,
+        "peak_absolute_current_ma": 368.4,
+        "absolute_charge_mas": 1610.0222344875333
+      }
+    },
+    "change_percent": {
+      "servo_1": {
+        "mean_absolute_current_ma_change_percent": 24.651679338298024,
+        "rms_current_ma_change_percent": 11.903667907383849,
+        "peak_absolute_current_ma_change_percent": -6.858710562414266,
+        "absolute_charge_mas_change_percent": -43.299910799541685
+      },
+      "servo_2": {
+        "mean_absolute_current_ma_change_percent": 97.33529637863779,
+        "rms_current_ma_change_percent": 46.91112895298723,
+        "peak_absolute_current_ma_change_percent": -6.449974606399197,
+        "absolute_charge_mas_change_percent": -10.420048809768153
+      }
+    }
+  },
+  "workshop_reported_spring_design": {
+    "attachment_point": "C",
+    "stiffness_n_m": 4.0,
+    "free_length_mm": 53.72,
+    "maximum_force_n": 0.309,
+    "peak_torque_reduction_percent": {
+      "motor_1": 53.59,
+      "motor_2": 68.95
+    },
+    "rms_torque_reduction_percent": {
+      "motor_1": 45.02,
+      "motor_2": 85.61
+    }
+  }
+}

@@ -33,16 +33,17 @@ def build_project_paths(project_root=None):
         ]
         root = None
         for candidate in candidates:
-            if (candidate / 'code').exists() and (candidate / 'datasets').exists():
+            if (candidate / 'src' / 'coursework').exists() and (candidate / 'data' / 'raw').exists():
                 root = candidate
                 break
         if root is None:
-            root = SCRIPT_PATH.parent.parent
+            root = SCRIPT_PATH.parents[2]
 
     return {
         'root': root,
-        'code': root / 'code',
-        'datasets': root / 'datasets',
+        'code': root / 'src' / 'coursework',
+        'datasets': root / 'data' / 'raw',
+        'results': root / 'results' / 'coursework',
     }
 
 
@@ -673,7 +674,7 @@ def export_gif(scene, output_path=None, n_frames=120):
 
         if output_path is None:
             suffix = 'with_spring' if scene['with_spring'] else 'without_spring'
-            output_path = PATHS['datasets'] / f'taller2_viewer_{suffix}.gif'
+            output_path = PATHS['results'] / f'taller2_viewer_{suffix}.gif'
         else:
             output_path = Path(output_path).expanduser().resolve()
 

@@ -11,15 +11,15 @@ PROJECT_ROOT = None
 
 def build_project_paths(project_root=None):
     if project_root is None:
-        project_root = Path(__file__).resolve().parent.parent
+        project_root = Path(__file__).resolve().parents[2]
     else:
         project_root = Path(project_root).expanduser().resolve()
 
     return {
         "root": project_root,
-        "code": project_root / "code",
-        "datasets": project_root / "datasets",
-        "plan": project_root / "datasets" / "robot_rr_plan.npz",
+        "notebooks": project_root / "notebooks" / "coursework",
+        "results": project_root / "results" / "coursework",
+        "plan": project_root / "results" / "coursework" / "robot_rr_plan.npz",
     }
 
 
@@ -29,7 +29,7 @@ PLAN_PATH = PATHS["plan"]
 if not PLAN_PATH.exists():
     raise FileNotFoundError(
         f"No existe {PLAN_PATH}. "
-        f"Primero ejecuta {PATHS['code'] / 'robot_RR_spline.ipynb'} para generar el plan."
+        f"Run {PATHS['notebooks'] / 'robot_RR_spline.ipynb'} first to generate the plan."
     )
 
 plan = np.load(PLAN_PATH)
